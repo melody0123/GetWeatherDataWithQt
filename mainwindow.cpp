@@ -9,11 +9,31 @@ MainWindow::MainWindow(QWidget *parent)
 
     manager = new QNetworkAccessManager(this);  //新建QNetworkAccessManager对象
     connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));//关联信号和槽
+    connectDB();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::connectDB()
+{
+    QSqlDatabase m_db = QSqlDatabase::addDatabase("QMYSQL");
+    m_db.setHostName("localhost");
+    m_db.setDatabaseName("test");       //这里输入你的数据库名
+    m_db.setUserName("root");
+    m_db.setPassword("14863");   //这里输入你的密码
+    if (!m_db.open()) {
+        QMessageBox::critical(0, QObject::tr("无法打开数据库"),
+                              "无法创建数据库连接！ ", QMessageBox::Cancel);
+        //return false;
+    } //下面来创建表
+    // 如果 MySQL 数据库中已经存在同名的表， 那么下面的代码不会执行
+    QSqlQuery query(m_db);
+    // 使数据库支持中文
+    query.exec("SET NAMES 'UTF-8'");
+    //return true;
 }
 
 void MainWindow::onGetWeatherButtonClicked()
@@ -76,5 +96,35 @@ void MainWindow::replyFinished(QNetworkReply *reply)
         }
         reply->deleteLater(); //销毁请求对象
     }
+}
+
+void MainWindow::onShowAllButtonClicked()
+{
+    model = new QSqlTableModel(this);
+    model->setTable("weather");
+    model->select();
+    // 设置编辑策略
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    ui->tableView->setModel(model);
+    model->setSort(0, Qt::AscendingOrder);
+    model->select();
+}
+
+void MainWindow::onSaveButtonClicked()
+{
+    QDateTime currentTime = QDateTime::currentDateTime();
+    QSqlQuery query(m_db);
+    QString city = ui->city->text();
+    QString temp = ui->wendu->text();
+    QString humidity = ui->type->text();
+    QString wind = ui->fengli->text();
+    QString userId = "20222222222";
+    QString userName = "超管";
+    QString createTime = currentTime.toString("yyyy-MM-dd hh:mm:ss");
+    QString sql = "insert into weather(city, temperature, humidity, wind, creator_id, creator, create_time) values (";
+    sql = sql + "'" + city + "','" + temp + "','" + humidity + "','" + wind + "','" + userId + "','" + userName + "','" +createTime + "')";
+    qDebug() << sql;
+    // ui->jsonEdit->setText(sql);
+    query.exec(sql);
 }
 
