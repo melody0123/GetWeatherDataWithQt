@@ -130,6 +130,11 @@ void MainWindow::onSaveButtonClicked()
     qDebug() << sql;
     // ui->jsonEdit->setText(sql);
     if(city.isEmpty() || temp.isEmpty() || humidity.isEmpty() || wind.isEmpty()) return;
+    else if (city != previous_city)
+    {
+        previous_city = city;
+        return;
+    }
     else query.exec(sql);
 }
 

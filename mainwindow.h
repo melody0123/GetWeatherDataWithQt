@@ -32,6 +32,7 @@ public:
 private:
     Ui::MainWindow *ui;
     QNetworkAccessManager *manager;  //请求句柄
+    QString previous_city; // 上一次保存的城市
     QString fengli;       //风力
     QString wendu;        //温度
     QString weather_type;  //天气类型
