@@ -181,6 +181,38 @@
      <string>保存</string>
     </property>
    </widget>
+   <widget class="QLabel" name="timeLable">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>180</y>
+      <width>281</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微软雅黑</family>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="autoButton">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>230</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>开始自动运行</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -260,10 +292,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>autoButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onAutoButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>530</x>
+     <y>262</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>639</x>
+     <y>261</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onGetWeatherButtonClicked()</slot>
   <slot>onShowAllButtonClicked()</slot>
   <slot>onSaveButtonClicked()</slot>
+  <slot>onAutoButtonClicked()</slot>
  </slots>
 </ui>

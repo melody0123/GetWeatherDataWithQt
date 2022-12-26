@@ -13,6 +13,7 @@
 #include <QSqlQuery>
 #include <QSqlTableModel>
 #include <QDebug>
+#include <QtCore>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -42,5 +43,8 @@ private slots:
     void replyFinished(QNetworkReply *reply);
     void onShowAllButtonClicked();
     void onSaveButtonClicked();
+    void onAutoButtonClicked();
+    void timerGetWeather();
+    void timerUpdate();
 };
 #endif // MAINWINDOW_H

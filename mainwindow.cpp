@@ -10,6 +10,10 @@ MainWindow::MainWindow(QWidget *parent)
     manager = new QNetworkAccessManager(this);  //新建QNetworkAccessManager对象
     connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));//关联信号和槽
     connectDB();
+
+    QTimer *timer = new QTimer(this);
+    connect(timer,SIGNAL(timeout()),this,SLOT(timerUpdate()));//关联信号和槽
+    timer->start(1000);
 }
 
 MainWindow::~MainWindow()
@@ -106,7 +110,7 @@ void MainWindow::onShowAllButtonClicked()
     // 设置编辑策略
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     ui->tableView->setModel(model);
-    model->setSort(0, Qt::AscendingOrder);
+    model->setSort(0, Qt::DescendingOrder);
     model->select();
 }
 
@@ -125,6 +129,28 @@ void MainWindow::onSaveButtonClicked()
     sql = sql + "'" + city + "','" + temp + "','" + humidity + "','" + wind + "','" + userId + "','" + userName + "','" +createTime + "')";
     qDebug() << sql;
     // ui->jsonEdit->setText(sql);
-    query.exec(sql);
+    if(city.isEmpty() || temp.isEmpty() || humidity.isEmpty() || wind.isEmpty()) return;
+    else query.exec(sql);
+}
+
+void MainWindow::onAutoButtonClicked()
+{
+    QTimer *timerGet = new QTimer(this);
+    connect(timerGet,SIGNAL(timeout()),this,SLOT(timerGetWeather()));//关联信号和槽
+    timerGet->start(10000);
+}
+
+void MainWindow::timerGetWeather()
+{
+    onGetWeatherButtonClicked();
+    onSaveButtonClicked();
+    onShowAllButtonClicked();
+}
+
+void MainWindow::timerUpdate()
+{
+    QDateTime currentTime = QDateTime::currentDateTime();
+    QString str = currentTime.toString("yyyy-MM-dd hh:mm:ss");
+    ui->timeLable->setText(str);
 }
 
